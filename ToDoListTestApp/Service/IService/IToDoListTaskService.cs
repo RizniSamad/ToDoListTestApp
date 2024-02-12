@@ -5,10 +5,10 @@ namespace ToDoListTestApp.Service.IService
 {
     public interface IToDoListTaskService
     {
-        Task<Responce<int>> CreateToDoListTask(ToDoListTaskCreateDto dto);
-        Task<Responce<int>> UpdateToDoListTask(ToDoListTaskUpdateDto dto);
+        Task<Responce<Guid>> CreateToDoListTask(ToDoListTaskCreateDto dto);
+        Task<Responce<Guid>> UpdateToDoListTask(ToDoListTaskUpdateDto dto);
         Task<PaginatedResponce<ToDoListTaskDto>> GetAllToDoListTasks(ToDoListTaskQueryParamsDto dto);
-        Task<Responce<ToDoListTaskDto>> GetToDoListTaskById(int id);
-        Task<Responce<bool>> DeleteToDoListTaskById(int id);
+        Task<Responce<ToDoListTaskDto>> GetToDoListTaskById(Guid id);
+        Task<Responce<bool>> DeleteToDoListTaskById(Guid id);
     }
 }
