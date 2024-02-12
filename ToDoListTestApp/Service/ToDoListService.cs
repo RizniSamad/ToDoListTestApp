@@ -15,7 +15,7 @@ namespace ToDoListTestApp.Service
             _repository = repository;
         }
 
-        public async Task<Responce<int>> CreateToDoList(ToDoListCreateDto dto)
+        public async Task<Responce<Guid>> CreateToDoList(ToDoListCreateDto dto)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace ToDoListTestApp.Service
                 var r = await _repository.SaveChangesAsync();
                 if (r > 0)
                 {
-                    return new Responce<int>(toDoList.Id, true, "Saved");
+                    return new Responce<Guid>(toDoList.Id, true, "Saved");
                 }
                 else
                 {
@@ -40,7 +40,7 @@ namespace ToDoListTestApp.Service
                         "Validation error"
                     };
 
-                    return new Responce<int>(0, false, "Failed", errors);
+                    return new Responce<Guid>(Guid.Empty, false, "Failed", errors);
                 }
             }
             catch (Exception)
@@ -51,11 +51,11 @@ namespace ToDoListTestApp.Service
                         "Sever error"
                 };
 
-                return new Responce<int>(0, false, "Failed", errors); ;
+                return new Responce<Guid>(Guid.Empty, false, "Failed", errors); ;
             }
         }
 
-        public async Task<Responce<bool>> DeleteToDoListById(int id)
+        public async Task<Responce<bool>> DeleteToDoListById(Guid id)
         {
             try
             {
@@ -109,7 +109,7 @@ namespace ToDoListTestApp.Service
             return new PaginatedResponce<ToDoListDto>(items, count, dto.CurrentPage, dto.PageSize, true);
         }
 
-        public async Task<Responce<ToDoListDto>> GetToDoListById(int id)
+        public async Task<Responce<ToDoListDto>> GetToDoListById(Guid id)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace ToDoListTestApp.Service
             }
         }
 
-        public async Task<Responce<int>> UpdateToDoList(ToDoListUpdateDto dto)
+        public async Task<Responce<Guid>> UpdateToDoList(ToDoListUpdateDto dto)
         {
             try
             {
@@ -172,7 +172,7 @@ namespace ToDoListTestApp.Service
                 var r = await _repository.SaveChangesAsync();
                 if (r > 0)
                 {
-                    return new Responce<int>(toDoList.Id, true, "Saved");
+                    return new Responce<Guid>(toDoList.Id, true, "Saved");
                 }
                 else
                 {
@@ -181,7 +181,7 @@ namespace ToDoListTestApp.Service
                         "Validation error"
                     };
 
-                    return new Responce<int>(0, false, "Failed", errors);
+                    return new Responce<Guid>(Guid.Empty, false, "Failed", errors);
                 }
             }
             catch (Exception)
@@ -192,7 +192,7 @@ namespace ToDoListTestApp.Service
                         "Sever error"
                 };
 
-                return new Responce<int>(0, false, "Failed", errors); ;
+                return new Responce<Guid>(Guid.Empty, false, "Failed", errors); ;
             }
         }
     }

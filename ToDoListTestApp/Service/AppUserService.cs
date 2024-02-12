@@ -1,4 +1,5 @@
-﻿using ToDoListTestApp.DTO.AppUsers;
+﻿using Microsoft.AspNetCore.Identity;
+using ToDoListTestApp.DTO.AppUsers;
 using ToDoListTestApp.Entity;
 using ToDoListTestApp.Helper;
 using ToDoListTestApp.Repository.IRepository;
@@ -10,30 +11,29 @@ namespace ToDoListTestApp.Service
     public class AppUserService : IAppUserService
     {
         private readonly IRepository<AppUser> _repository;
-        public AppUserService(IRepository<AppUser> repository)
+        private readonly UserManager<AppUser> _userManager;
+        public AppUserService(IRepository<AppUser> repository, UserManager<AppUser> userManager)
         {
             _repository = repository;
+            _userManager = userManager;
         }
 
-        public async Task<Responce<int>> CreateAppUser(AppUserCreateDto dto)
+        public async Task<Responce<Guid>> CreateAppUser(AppUserCreateDto dto)
         {
             try
             {
                 AppUser appUser = new()
                 {
                     Email = dto.Email,
-                    Password = dto.Password,
                     FirstName = dto.FirstName,
                     LastName = dto.LastName,
                     Gender = dto.Gender,
                     CreatedDate = DateTime.Now,
                 };
-
-                await _repository.AddAsync(appUser);
-                var r = await _repository.SaveChangesAsync();
-                if (r > 0)
+                var r = await _userManager.CreateAsync(appUser, dto.Password);
+                if (r.Succeeded)
                 {
-                    return new Responce<int>(appUser.Id,true,"Saved");
+                    return new Responce<Guid>(appUser.Id,true,"Saved");
                 }
                 else
                 {
@@ -42,7 +42,7 @@ namespace ToDoListTestApp.Service
                         "Validation error"
                     };
 
-                    return new Responce<int>(0, false, "Failed", errors);
+                    return new Responce<Guid>(Guid.Empty, false, "Failed", errors);
                 }
             }
             catch (Exception)
@@ -53,19 +53,17 @@ namespace ToDoListTestApp.Service
                         "Sever error"
                 };
 
-                return new Responce<int>(0, false, "Failed", errors); ;
+                return new Responce<Guid>(Guid.Empty, false, "Failed", errors); ;
             }
         }
 
-        public async Task<Responce<bool>> DeleteAppUserById(int id)
+        public async Task<Responce<bool>> DeleteAppUserById(Guid id)
         {
             try
             {
                 AppUser appUser = await _repository.GetByIdAsync(id);
-
-                _repository.Remove(appUser);
-                var r = await _repository.SaveChangesAsync();
-                if (r > 0)
+                var r = await _userManager.DeleteAsync(appUser);
+                if (r.Succeeded)
                 {
                     return new Responce<bool>(true, true, "Saved");
                 }
@@ -111,7 +109,7 @@ namespace ToDoListTestApp.Service
             return new PaginatedResponce<AppUserDto>(items, count, dto.CurrentPage, dto.PageSize, true);
         }
 
-        public async Task<Responce<AppUserDto>> GetAppUserById(int id)
+        public async Task<Responce<AppUserDto>> GetAppUserById(Guid id)
         {
             try
             {
@@ -162,7 +160,7 @@ namespace ToDoListTestApp.Service
             }
         }
 
-        public async Task<Responce<int>> UpdateAppUser(AppUserUpdateDto dto)
+        public async Task<Responce<Guid>> UpdateAppUser(AppUserUpdateDto dto)
         {
             try
             {
@@ -175,7 +173,7 @@ namespace ToDoListTestApp.Service
                 var r = await _repository.SaveChangesAsync();
                 if (r > 0)
                 {
-                    return new Responce<int>(appUser.Id, true, "Saved");
+                    return new Responce<Guid>(appUser.Id, true, "Saved");
                 }
                 else
                 {
@@ -184,7 +182,7 @@ namespace ToDoListTestApp.Service
                         "Validation error"
                     };
 
-                    return new Responce<int>(0, false, "Failed", errors);
+                    return new Responce<Guid>(Guid.Empty, false, "Failed", errors);
                 }
             }
             catch (Exception)
@@ -195,7 +193,7 @@ namespace ToDoListTestApp.Service
                         "Sever error"
                 };
 
-                return new Responce<int>(0, false, "Failed", errors); ;
+                return new Responce<Guid>(Guid.Empty, false, "Failed", errors); ;
             }
         }
     }
