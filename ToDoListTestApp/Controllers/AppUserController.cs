@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ToDoListTestApp.DTO.AppUsers;
 using ToDoListTestApp.Helper;
@@ -6,6 +7,7 @@ using ToDoListTestApp.Service.IService;
 
 namespace ToDoListTestApp.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AppUserController : ControllerBase
@@ -17,6 +19,19 @@ namespace ToDoListTestApp.Controllers
             _appUserService = appUserService;
         }
 
+        [AllowAnonymous]
+        [HttpPost("login", Name = "Login")]
+        public async Task<ActionResult<Responce<TokenDto>>> Login([FromBody] LoginDto loginDto)
+        {
+            var result = await _appUserService.Login(loginDto);
+            if (result.Success)
+            {
+                return result;
+            }
+            return BadRequest(result);
+        }
+        
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<Responce<Guid>>> CreateAppUser([FromBody] AppUserCreateDto dto)
         {

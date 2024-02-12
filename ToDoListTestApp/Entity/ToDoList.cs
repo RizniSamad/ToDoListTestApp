@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using ToDoListTestApp.Entity.Base;
 using ToDoListTestApp.Entity.Interfaces;
 
 namespace ToDoListTestApp.Entity

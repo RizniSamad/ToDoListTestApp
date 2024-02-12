@@ -1,4 +1,5 @@
-﻿using ToDoListTestApp.Entity.Enum;
+﻿using ToDoListTestApp.Entity.Base;
+using ToDoListTestApp.Entity.Enum;
 using ToDoListTestApp.Entity.Interfaces;
 
 namespace ToDoListTestApp.Entity

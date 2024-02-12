@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ToDoListTestApp.Entity
+namespace ToDoListTestApp.Entity.Base
 {
     public abstract class BaseEntity
     {

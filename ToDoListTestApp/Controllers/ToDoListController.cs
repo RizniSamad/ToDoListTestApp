@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ToDoListTestApp.DTO.ToDoLists;
 using ToDoListTestApp.Helper;
 using ToDoListTestApp.Service;
@@ -6,6 +7,7 @@ using ToDoListTestApp.Service.IService;
 
 namespace ToDoListTestApp.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ToDoListController : ControllerBase

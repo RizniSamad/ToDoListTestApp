@@ -12,10 +12,14 @@ namespace ToDoListTestApp.Service
     {
         private readonly IRepository<AppUser> _repository;
         private readonly UserManager<AppUser> _userManager;
-        public AppUserService(IRepository<AppUser> repository, UserManager<AppUser> userManager)
+        private readonly SignInManager<AppUser> _signInManager;
+        private readonly ITokenService _tokenService;
+        public AppUserService(IRepository<AppUser> repository, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
         {
             _repository = repository;
             _userManager = userManager;
+            _signInManager = signInManager;
+            _tokenService = tokenService;
         }
 
         public async Task<Responce<Guid>> CreateAppUser(AppUserCreateDto dto)
@@ -196,6 +200,60 @@ namespace ToDoListTestApp.Service
                 };
 
                 return new Responce<Guid>(Guid.Empty, false, "Failed", errors); ;
+            }
+        }
+
+        public async Task<Responce<TokenDto>> Login(LoginDto loginDto)
+        {
+            try
+            {
+                var spec = new UserByEmailSpec(loginDto.Email);
+                var user = await _repository.GetFirstOrDefaultAsync(spec);
+
+                if (user == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "User name or password is incorrect"
+                    };
+
+                    return new Responce<TokenDto>(new(), false, "Failed", errors);
+                }
+
+                var result = await _signInManager.CheckPasswordSignInAsync(
+                     user,
+                     loginDto.Password,
+                     false
+                 );
+
+                if (result == null)
+                {
+                    List<string> errors = new()
+                    {
+                        "User name or password is incorrect"
+                    };
+
+                    return new Responce<TokenDto>(new(), false, "Failed", errors);
+                }
+
+
+                var token = _tokenService.CreateToken(user);
+                if (!token.Success)
+                {
+                    return new Responce<TokenDto>(token.Data, token.Success, token.Message, token.Errors);
+
+                }
+                return new Responce<TokenDto>(token.Data, true, token.Message);
+            }
+            catch (Exception)
+            {
+
+                List<string> errors = new()
+                {
+                        "Sever error"
+                };
+
+                return new Responce<TokenDto>(new(), false, "Failed", errors); ;
             }
         }
     }

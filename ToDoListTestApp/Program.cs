@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
 using ToDoListTestApp.Data;
 using ToDoListTestApp.Entity;
@@ -49,13 +50,38 @@ builder.Services
 
 builder.Services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
 
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAppUserService, AppUserService>();
 builder.Services.AddScoped<IToDoListService, ToDoListService>();
 builder.Services.AddScoped<IToDoListTaskService, ToDoListTaskService>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+
+    var securitySchema = new OpenApiSecurityScheme
+    {
+        Description = "JWT Auth Bearer Scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        Reference = new OpenApiReference
+        {
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer"
+        }
+    };
+
+    c.AddSecurityDefinition("Bearer", securitySchema);
+    var securityRequirement = new OpenApiSecurityRequirement
+            {
+                { securitySchema, new[] { "Bearer" } }
+            };
+    c.AddSecurityRequirement(securityRequirement);
+});
 
 
 var app = builder.Build();
@@ -64,11 +90,12 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
