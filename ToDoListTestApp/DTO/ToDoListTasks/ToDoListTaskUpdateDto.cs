@@ -6,7 +6,7 @@ namespace ToDoListTestApp.DTO.ToDoListTasks
     public class ToDoListTaskUpdateDto
     {
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]
@@ -18,6 +18,6 @@ namespace ToDoListTestApp.DTO.ToDoListTasks
         [Required]
         public ToDoListTaskStatus Status { get; set; }
         [Required]
-        public int ToDoListId { get; set; }
+        public Guid ToDoListId { get; set; }
     }
 }

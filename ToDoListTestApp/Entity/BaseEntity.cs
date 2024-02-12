@@ -2,10 +2,10 @@
 
 namespace ToDoListTestApp.Entity
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public DateTime CreatedDate { get; set; }
     }
 }

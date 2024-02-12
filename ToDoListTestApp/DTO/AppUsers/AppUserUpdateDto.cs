@@ -6,7 +6,7 @@ namespace ToDoListTestApp.DTO.AppUsers
     public class AppUserUpdateDto
     {
         [Required]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]

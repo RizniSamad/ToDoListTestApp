@@ -17,6 +17,6 @@ namespace ToDoListTestApp.DTO.ToDoListTasks
         public ToDoListTaskStatus Status { get; set; }
 
         [Required]
-        public int ToDoListId { get; set; }
+        public Guid ToDoListId { get; set; }
     }
 }

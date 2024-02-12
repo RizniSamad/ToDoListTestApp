@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using ToDoListTestApp.Entity.Enum;
+using ToDoListTestApp.Entity.Interfaces;
 
 namespace ToDoListTestApp.Entity
 {
-    public class ToDoListTask : BaseEntity
+    public class ToDoListTask : BaseEntity, IAggregatedRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -11,7 +12,7 @@ namespace ToDoListTestApp.Entity
         public DateTime EndDate { get; set; }
         public ToDoListTaskStatus Status { get; set; }
 
-        public int ToDoListId { get; set; }
+        public Guid ToDoListId { get; set; }
         [ForeignKey("ToDoListId")]
         public ToDoList ToDoList { get; set; }
     }

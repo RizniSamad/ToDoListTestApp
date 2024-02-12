@@ -10,6 +10,6 @@ namespace ToDoListTestApp.DTO.ToDoLists
         public string Description { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
     }
 }
