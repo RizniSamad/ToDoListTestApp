@@ -24,9 +24,11 @@ namespace ToDoListTestApp.Service
             {
                 AppUser appUser = new()
                 {
-                    Email = dto.Email,
                     FirstName = dto.FirstName,
                     LastName = dto.LastName,
+                    Email = dto.Email,
+                    UserName = dto.Email,
+                    EmailConfirmed = true,
                     Gender = dto.Gender,
                     CreatedDate = DateTime.Now,
                 };
