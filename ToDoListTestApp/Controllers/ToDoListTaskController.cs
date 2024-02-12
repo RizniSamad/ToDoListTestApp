@@ -18,7 +18,7 @@ namespace ToDoListTestApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Responce<int>>> CreateToDoListTask([FromBody] ToDoListTaskCreateDto dto)
+        public async Task<ActionResult<Responce<Guid>>> CreateToDoListTask([FromBody] ToDoListTaskCreateDto dto)
         {
             var result = await _toDoListTaskService.CreateToDoListTask(dto);
             if (result.Success)
@@ -30,7 +30,7 @@ namespace ToDoListTestApp.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Responce<int>>> UpdateToDoListTask([FromBody] ToDoListTaskUpdateDto dto)
+        public async Task<ActionResult<Responce<Guid>>> UpdateToDoListTask([FromBody] ToDoListTaskUpdateDto dto)
         {
             var resultEx = await _toDoListTaskService.GetToDoListTaskById(dto.Id);
             if (resultEx.Success)
@@ -59,8 +59,8 @@ namespace ToDoListTestApp.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Responce<ToDoListTaskDto>>> GetToDoListTaskById(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<Responce<ToDoListTaskDto>>> GetToDoListTaskById(Guid id)
         {
             var result = await _toDoListTaskService.GetToDoListTaskById(id);
             if (result.Success)
@@ -71,8 +71,8 @@ namespace ToDoListTestApp.Controllers
             return BadRequest(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Responce<bool>>> DeleteToDoListTaskById(int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Responce<bool>>> DeleteToDoListTaskById(Guid id)
         {
             var resultEx = await _toDoListTaskService.GetToDoListTaskById(id);
             if (resultEx.Success)

@@ -18,7 +18,7 @@ namespace ToDoListTestApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Responce<int>>> CreateAppUser([FromBody] AppUserCreateDto dto)
+        public async Task<ActionResult<Responce<Guid>>> CreateAppUser([FromBody] AppUserCreateDto dto)
         {
             var result = await _appUserService.CreateAppUser(dto);
             if (result.Success)
@@ -30,7 +30,7 @@ namespace ToDoListTestApp.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<Responce<int>>> UpdateAppUser([FromBody] AppUserUpdateDto dto)
+        public async Task<ActionResult<Responce<Guid>>> UpdateAppUser([FromBody] AppUserUpdateDto dto)
         {
             var resultEx = await _appUserService.GetAppUserById(dto.Id);
             if (resultEx.Success)
@@ -59,8 +59,8 @@ namespace ToDoListTestApp.Controllers
             return BadRequest(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Responce<AppUserDto>>> GetAppUserById(int id)
+        [HttpGet("{id:guid}")]
+        public async Task<ActionResult<Responce<AppUserDto>>> GetAppUserById(Guid id)
         {
             var result = await _appUserService.GetAppUserById(id);
             if (result.Success)
@@ -71,8 +71,8 @@ namespace ToDoListTestApp.Controllers
             return BadRequest(result);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Responce<bool>>> DeleteAppUserById(int id)
+        [HttpDelete("{id:guid}")]
+        public async Task<ActionResult<Responce<bool>>> DeleteAppUserById(Guid id)
         {
             var resultEx = await _appUserService.GetAppUserById(id);
             if (resultEx.Success)
