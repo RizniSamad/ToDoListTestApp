@@ -207,5 +207,62 @@ namespace ToDoListTestApp.Service
                 return new Responce<Guid>(Guid.Empty, false, "Failed", errors); ;
             }
         }
+
+        public async Task<Responce<ToDoListTaskDto>> UpcommingTask(Guid guid)
+        {
+
+            try
+            {
+                var spec = new ToDoListTaskUpcommingTaskSpec(guid);
+                var toDoListTask = await _repository.GetFirstOrDefaultAsync(spec);
+
+                if (toDoListTask == null)
+                {
+                    List<string> errors = new()
+                        {
+                            "Not found"
+                        };
+
+                    return new Responce<ToDoListTaskDto>(null, false, "Failed", errors);
+                }
+
+                ToDoListTaskDto toDoListTaskDto = new()
+                {
+                    Id = guid,
+                    Name = toDoListTask.Name,
+                    Status = toDoListTask.Status.ToString(),
+                    Description = toDoListTask.Description,
+                    EndDate = toDoListTask.EndDate,
+                    StartDate = toDoListTask.StartDate,
+                    ToDoListId = toDoListTask.ToDoList.Id,
+                    ToDoList = toDoListTask.ToDoList.Name
+                };
+
+                if (toDoListTask != null)
+                {
+                    return new Responce<ToDoListTaskDto>(toDoListTaskDto, true, "Saved");
+                }
+                else
+                {
+                    List<string> errors = new()
+                        {
+                            "Validation error"
+                        };
+
+                    return new Responce<ToDoListTaskDto>(null, false, "Failed", errors);
+                }
+            }
+            catch (Exception)
+            {
+
+                List<string> errors = new()
+                {
+                        "Sever error"
+                };
+
+                return new Responce<ToDoListTaskDto>(null, false, "Failed", errors); ;
+            }
+            
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace ToDoListTestApp.Service.IService
         Task<PaginatedResponce<ToDoListTaskDto>> GetAllToDoListTasks(ToDoListTaskQueryParamsDto dto);
         Task<Responce<ToDoListTaskDto>> GetToDoListTaskById(Guid id);
         Task<Responce<bool>> DeleteToDoListTaskById(Guid id);
+        Task<Responce<ToDoListTaskDto>> UpcommingTask(Guid guid);
     }
 }
