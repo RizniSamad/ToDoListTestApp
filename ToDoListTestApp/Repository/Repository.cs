@@ -3,11 +3,12 @@ using Ardalis.Specification.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ToDoListTestApp.Data;
 using ToDoListTestApp.Entity;
+using ToDoListTestApp.Entity.Interfaces;
 using ToDoListTestApp.Repository.IRepository;
 
 namespace ToDoListTestApp.Repository
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public class Repository<T> : IRepository<T> where T : class, IAggregatedRoot
     {
         private readonly ApplicationDbContext _context;
         private DbSet<T> _dbSet;
@@ -18,7 +19,7 @@ namespace ToDoListTestApp.Repository
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
